@@ -1,1 +1,8 @@
-
+spring:
+  jpa:
+    database: mysql
+    show-sql: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/financecontrol?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root
