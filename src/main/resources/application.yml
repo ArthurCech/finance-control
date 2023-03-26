@@ -10,3 +10,5 @@ spring:
     deserialization:
       fail-on-unknown-properties: true
     date-format: yyyy-MM-dd
+  profiles:
+    active: oauth-security
