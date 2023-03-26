@@ -7,6 +7,7 @@ import com.github.arthurcech.financecontrol.dto.mapper.LancamentoMapper;
 import com.github.arthurcech.financecontrol.event.RecursoCriadoEvent;
 import com.github.arthurcech.financecontrol.repository.LancamentoRepository;
 import com.github.arthurcech.financecontrol.repository.filter.LancamentoFilter;
+import com.github.arthurcech.financecontrol.repository.projection.ResumoLancamento;
 import com.github.arthurcech.financecontrol.service.LancamentoService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -47,6 +48,11 @@ public class LancamentoResource {
     public Page<LancamentoResponse> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable) {
         return lancamentoRepository.filtrar(lancamentoFilter, pageable)
                 .map(LancamentoMapper.INSTANCE::toLancamentoResponse);
+    }
+
+    @GetMapping(params = "resumo")
+    public Page<ResumoLancamento> resumir(LancamentoFilter lancamentoFilter, Pageable pageable) {
+        return lancamentoRepository.resumir(lancamentoFilter, pageable);
     }
 
     @GetMapping("/{codigo}")
