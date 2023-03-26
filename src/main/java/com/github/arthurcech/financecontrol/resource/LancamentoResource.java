@@ -2,6 +2,7 @@ package com.github.arthurcech.financecontrol.resource;
 
 import com.github.arthurcech.financecontrol.domain.Lancamento;
 import com.github.arthurcech.financecontrol.dto.lancamento.LancamentoPostRequest;
+import com.github.arthurcech.financecontrol.dto.lancamento.LancamentoPutRequest;
 import com.github.arthurcech.financecontrol.dto.lancamento.LancamentoResponse;
 import com.github.arthurcech.financecontrol.dto.mapper.LancamentoMapper;
 import com.github.arthurcech.financecontrol.event.RecursoCriadoEvent;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -75,6 +77,19 @@ public class LancamentoResource {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long codigo) {
         lancamentoRepository.deleteById(codigo);
+    }
+
+    @PutMapping("/{codigo}")
+    public ResponseEntity<LancamentoResponse> atualizar(
+            @PathVariable Long codigo,
+            @Valid @RequestBody LancamentoPutRequest lancamentoPutRequest
+    ) {
+        try {
+            Lancamento lancamento = lancamentoService.atualizar(codigo, lancamentoPutRequest);
+            return ResponseEntity.ok(LancamentoMapper.INSTANCE.toLancamentoResponse(lancamento));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

@@ -5,14 +5,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-public class CategoriaLancamentoPostRequest {
+public class CategoriaLancamentoPostPutRequest {
 
     @NotNull
     @Positive
     private final Long codigo;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public CategoriaLancamentoPostRequest(Long codigo) {
+    public CategoriaLancamentoPostPutRequest(Long codigo) {
         this.codigo = codigo;
     }
 

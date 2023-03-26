@@ -4,6 +4,7 @@ import com.github.arthurcech.financecontrol.domain.Categoria;
 import com.github.arthurcech.financecontrol.domain.Lancamento;
 import com.github.arthurcech.financecontrol.domain.Pessoa;
 import com.github.arthurcech.financecontrol.dto.lancamento.LancamentoPostRequest;
+import com.github.arthurcech.financecontrol.dto.lancamento.LancamentoPutRequest;
 import com.github.arthurcech.financecontrol.dto.mapper.LancamentoMapper;
 import com.github.arthurcech.financecontrol.repository.CategoriaRepository;
 import com.github.arthurcech.financecontrol.repository.LancamentoRepository;
@@ -44,6 +45,44 @@ public class LancamentoService {
 
         Lancamento lancamento = LancamentoMapper.INSTANCE.toLancamento(lancamentoPostRequest);
         return lancamentoRepository.save(lancamento);
+    }
+
+    public Lancamento atualizar(Long codigo, LancamentoPutRequest lancamentoPutRequest) {
+        Lancamento lancamento = buscarLancamentoExistente(codigo);
+        LancamentoMapper.INSTANCE.updateLancamentoFromDto(lancamentoPutRequest, lancamento);
+
+        if (!lancamentoPutRequest.getPessoa().getCodigo().equals(lancamento.getPessoa().getCodigo())) {
+            validarPessoa(lancamentoPutRequest, lancamento);
+        }
+
+        if (!lancamentoPutRequest.getCategoria().getCodigo().equals(lancamento.getCategoria().getCodigo())) {
+            validarCategoria(lancamentoPutRequest, lancamento);
+        }
+
+        return lancamentoRepository.save(lancamento);
+    }
+
+    private void validarPessoa(LancamentoPutRequest lancamentoPutRequest, Lancamento lancamento) {
+        Optional<Pessoa> pessoa = Optional.empty();
+        if (lancamentoPutRequest.getPessoa().getCodigo() != null) {
+            pessoa = pessoaRepository.findById(lancamentoPutRequest.getPessoa().getCodigo());
+        }
+        if (pessoa.isEmpty() || pessoa.get().isInativo()) {
+            throw new PessoaInexistenteOuInativaException();
+        }
+        lancamento.setPessoa(pessoa.get());
+    }
+
+    private void validarCategoria(LancamentoPutRequest lancamentoPutRequest, Lancamento lancamento) {
+        if (lancamentoPutRequest.getCategoria().getCodigo() != null) {
+            Categoria categoria = categoriaRepository.findById(lancamentoPutRequest.getCategoria().getCodigo())
+                    .orElseThrow(CategoriaInexistenteException::new);
+            lancamento.setCategoria(categoria);
+        }
+    }
+
+    private Lancamento buscarLancamentoExistente(Long codigo) {
+        return lancamentoRepository.findById(codigo).orElseThrow(IllegalArgumentException::new);
     }
 
 }

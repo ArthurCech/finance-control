@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class LancamentoPostRequest {
+public class LancamentoPutRequest {
 
     @NotBlank
     @Size(min = 1, max = 50)
@@ -32,7 +32,7 @@ public class LancamentoPostRequest {
     @Valid
     private final PessoaLancamentoPostPutRequest pessoa;
 
-    public LancamentoPostRequest(
+    public LancamentoPutRequest(
             String descricao,
             LocalDate dataVencimento,
             LocalDate dataPagamento,
