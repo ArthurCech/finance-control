@@ -1,3 +1,9 @@
 financecontrol:
+  origem-permitida: http://localhost:4200
   seguranca:
     enable-https: true
+spring:
+  datasource:
+    url: { JDBC_DATABASE_URL }
+    username: { JDBC_DATABASE_USERNAME }
+    password: { JDBC_DATABASE_PASSWORD }
